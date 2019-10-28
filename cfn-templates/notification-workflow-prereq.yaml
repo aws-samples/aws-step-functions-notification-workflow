@@ -1,0 +1,121 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Pre-requisite set up for Step function notification workflow lab
+Resources:
+  APIDemoWebsiteBucket:
+        Type: AWS::S3::Bucket
+        DeletionPolicy: Retain
+        Properties:
+            WebsiteConfiguration:
+                IndexDocument: "index.html"
+                ErrorDocument: "index.html"
+  LambdaExecutionRole:
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+        - Action:
+          - sts:AssumeRole
+          Effect: Allow
+          Principal:
+            Service:
+            - lambda.amazonaws.com
+          Sid: AllowLambdaServiceToAssumeRole
+        Version: '2012-10-17'
+      Path: /
+      Policies:
+      - PolicyDocument:
+          Statement:
+          - Action:
+            - ses:SendEmail
+            - sns:Publish
+            - sns:SetSMSAttributes
+            - states:GetActivityTask
+            Effect: Allow
+            Resource: '*'
+          Version: '2012-10-17'
+        PolicyName: SnsSesExecutionPol
+      - PolicyDocument:
+          Statement:
+          - Action:
+            - logs:CreateLogStream
+            - logs:CreateLogGroup
+            - logs:PutLogEvents
+            Effect: Allow
+            Resource: '*'
+          Version: '2012-10-17'
+        PolicyName: WriteToCWLogs
+    Type: AWS::IAM::Role
+  StepFunctionExecutionRole:
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+        - Action: sts:AssumeRole
+          Effect: Allow
+          Principal:
+            Service:
+              Fn::Sub: states.${AWS::Region}.amazonaws.com
+        Version: '2012-10-17'
+      Path: /
+      Policies:
+      - PolicyDocument:
+          Statement:
+          - Action:
+            - lambda:InvokeFunction
+            Effect: Allow
+            Resource: '*'
+          Version: '2012-10-17'
+        PolicyName: StatesExecutionPolicy
+    Type: AWS::IAM::Role
+  APIGatewayExecutionRole:
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+        - Action:
+          - sts:AssumeRole
+          Effect: Allow
+          Principal:
+            Service:
+            - apigateway.amazonaws.com
+          Sid: AllowAPIGatewayServiceToAssumeRole
+        Version: '2012-10-17'
+      Path: /
+      Policies:
+      - PolicyDocument:
+          Statement:
+          - Action:
+            - states:*
+            Effect: Allow
+            Resource: '*'
+          Version: '2012-10-17'
+        PolicyName: StepFnExecutionPol
+      - PolicyDocument:
+          Statement:
+          - Action:
+            - logs:CreateLogStream
+            - logs:CreateLogGroup
+            - logs:PutLogEvents
+            - logs:DescribeLogGroups
+            - logs:DescribeLogStreams
+            - logs:PutLogEvents
+            - logs:GetLogEvents
+            - logs:FilterLogEvents
+            Effect: Allow
+            Resource: '*'
+          Version: '2012-10-17'
+        PolicyName: WriteToCWLogs
+    Type: AWS::IAM::Role
+Outputs:
+  LambdaExecutionRoleArn:
+    Description: IAM Service Role for Lambda
+    Value: !GetAtt LambdaExecutionRole.Arn
+  StepFunctionExecutionRoleArn:
+    Description: IAM Service Role for Step Function
+    Value: !GetAtt StepFunctionExecutionRole.Arn  
+  APIGatewayExecutionRoleArn:
+    Description: IAM Service Role for APIGateway
+    Value: !GetAtt APIGatewayExecutionRole.Arn
+  DemoWebsite:
+        Description: "Media Analysis Demo Website URL"
+        Value: !Sub http://${APIDemoWebsiteBucket}.s3-website.${AWS::Region}.amazonaws.com/
+    
+
+    

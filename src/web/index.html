@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Building with Step Functions</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue-resource@1.5.0"></script>
+</head>
+
+<body>
+
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <div class="jumbotron pt-4 pb-4">
+                <img src="images/AWS_logo_RGB_REV.png" title="AWS" alt="AWS" width="160" height="*" class="mx-auto d-block"/>
+                <blockquote class="blockquote text-center">
+                    <h1 class="display-4 pt-4">Building with <img src="images/header-icon_step-functions.png" title="AWS" alt="AWS" class="mx-auto"/> AWS Step Functions</h1>
+                </blockquote>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container" id="app">
+     <div class="row">
+        <div class="col">
+            <div class="row">
+                <div class="col">
+            <form id="apiSubmitForm" v-on:submit.prevent="submitToAPI">
+                <h3 class="text-primary">Send Notifications</h3>
+                <div class="form-group">
+                    <label for="API_URL">API End Point</label>
+                    <input type="text" class="form-control col-12" id="api_url" v-model="notifications.api_url"/>
+                </div>
+                <div class="form-group">
+                    <label for="Request">Request JSON</label>
+                    <textarea v-model="notifications.requestJSON" class="form-control col-12" id="requestJSON"></textarea>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <button type="button" class="btn btn-secondary" v-on:click="resetForm">Cancel</button>
+                </div>
+            </form>
+            </div>
+            </div>
+            <div>
+                <div class="alert alert-success" role="alert" v-show="showMessage">
+                    Notification workflow started for requested channels<br/>
+                </div>
+                <div class="alert alert-info small" role="alert" v-show="showMessage">
+                    <strong>Execution ARN:</strong> <a :href="executionUrl()">{{ executionArn }}</a><br/>
+                    <strong>Start Date:</strong> {{ executionStartDate }}
+                </div>
+            </div>
+
+        </div>
+        <div class="col">
+            <div class="card text-white bg-secondary ">
+                <div class="card-header">SCENARIO</div>
+                <div class="card-body">
+                    <p>Notifications Workflow API powered by AWS Step Functions and Amazon API Gateway to notify people on email, SMS or Slack..</p>
+
+                    <p>This demo exposes an <a href="https://aws.amazon.com/step-functions/">AWS Step Function</a>  via an
+                        <a href="https://aws.amazon.com/api-gateway/">Amazon API Gateway</a>. The step function invokes
+                        tasks via <a href="https://aws.amazon.com/lambda/">AWS Lambda functions</a> (Node.js 4.3), which in turn send SMS via <a href="https://aws.amazon.com/sns/">Amazon Simple Notification Service</a>>, email via <a href="https://aws.amazon.com/ses/">Amazon Simple Email Service</a> and messages to Slack channel via Slack webhook.</p>
+                </div>
+            </div>
+            <img src="images/stepfunction.png" class="img-fluid pt-5" alt="state-machine" />
+        </div>
+    </div>
+</div>
+</body>
+<script type="application/javascript">
+
+    var app = new Vue({
+        el: '#app',
+        data: function () {
+
+            return {
+                notifications: {
+                    api_url: '',
+                    requestJSON: ''
+                },
+                showMessage: false,
+                executionArn: '',
+                executionStartDate: ''
+            }
+        },
+        methods: {
+
+            executionUrl: function () {
+                
+                var interString = this.notifications.api_url.replace(new RegExp('.*' + 'execute-api.'), '');
+                var region =  interString.substring(0, interString.indexOf('.amazonaws.'));
+                
+                return 'https://'+region+'.console.aws.amazon.com/states/home?region='+region+'#/executions/details/' + this.executionArn
+            },
+
+            resetForm: function () {
+                this.notifications.api_url = ''
+                this.notifications.requestJSON = ''
+                this.showMessage = false
+            },
+
+            submitToAPI: function () {
+
+                console.log(this.data);
+
+                // POST /someUrl
+                this.$http.post(this.notifications.api_url, JSON.parse(this.notifications.requestJSON)).then(response => {
+                        // get status
+                        console.log(response.body)
+                        this.executionArn = response.body.executionArn;
+                        this.executionStartDate = response.body.startDate;
+                        this.showMessage = true;
+
+                    }, error => {
+                        alert("in error"+JSON.stringify(error));
+                        console.log(error)
+
+                });
+            }
+    } // end methods
+
+    })
+
+</script>
+
+</html>
