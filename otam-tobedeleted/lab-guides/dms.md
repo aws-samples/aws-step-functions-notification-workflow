@@ -247,7 +247,7 @@ Action | Make lowercase
     ![Table statistics](images/table_statistics.png)
 2. If there is any error, the status color changes from green to red. Click on **View logs** link for the logs.
 3. On the target Aurora database, check the tables for migrated data using SQL Developer.
-     ![Verify Target datavase](images/verify_target_db.png)
+     ![Verify Target database](images/verify_target_db.png)
 
 #### Restore the foreign keys 
 1. When the full load is complete, enable the foreign key constraints.
@@ -307,16 +307,149 @@ ON DELETE NO ACTION;
 ```
 
 ___
-## Task 4 - Create Change Data Capture (CDC) from the source Oracle to the target Aurora database
+## Task 4 - Run DMS Replication Task for Change Data Capture (CDC)
 
-1. Set up Supplemental Logging for the Oracle database
+Oracle offers two methods for reading the redo logs when doing change processing, Oracle LogMiner and Oracle Binary Reader. Oracle LogMiner provides a SQL interface to Oracle’s online and archived redo log files. Binary Reader is an AWS DMS feature that reads and parses the raw redo log files directly.
+
+By default, AWS DMS uses Oracle LogMiner for change data capture (CDC).
+
+For AWS DMS to read this information, make sure the archive logs are retained on the database server as long as AWS DMS requires them. Retaining archive logs for 24 hours is usually sufficient.
+
+To capture change data, AWS DMS requires database-level supplemental logging to be enabled on your source database. Doing this ensures that the LogMiner has the minimal information to support various table structures such as clustered and index-organized tables.
+
+Similarly, you need to enable table-level supplemental logging for each table that you want to migrate.
+
+Refer to [Using Oracle LogMiner or Oracle Binary Reader for Change Data Capture (CDC)](https://docs.aws.amazon.com/dms/latest/userguide/CHAP_Source.Oracle.html#CHAP_Source.Oracle.CDC) for more details.  
+
+**For this workshop we have already made these changes in the source Oracle database.** 
+
+#### Configure and run CDC Replication Task
+In this part of the lab you are going to create another Database Migration Tasks for capturing data changes from the source Oracle database and migrate to target Aurora PostgreSQL.
+
+1. Click on **Database migration tasks** on the left-hand menu, then click on the **Create task** button on the top right corner.
+
+![Create replication task](images/create_task.png)
 
 
-___
+2. Create a data migration task with the following values for migrating the `HR` database.
 
-### Conclusion
+Parameter | Value
+--- | ---
+Task identifier | oracle-migration-task-cdc
+Replication instance | your replication instance
+Source database endpoint | oracle-source
+Target database endpoint | aurora-postgresql-target
+Migration type | Replicate data changes only
+Start task on create | Checked
+CDC start mode | Don’t use custom CDC start mode
+CDC stop mode | Don’t use custom CDC stop mode
+Target table preparation mode | Do nothing
+Include LOB columns in replication | Limited LOB mode
+Max LOB size (KB) | 32
+Enable validation | Unchecked
+Enable CloudWatch logs | Checked
 
+*Enabling the logging would help debugging issues that DMS encounters during data migration*
 
+3. Expand the Table mappings section, and select Guided UI for the editing mode
+4. The Table mappings are as below which are same as the mappings of the previous full-load replication task. Click on Add new selection rule button and enter the following values.
+
+Parameter | Value
+----- | -----
+Schema name | HR
+Table name| %
+Action | Include
+
+5. Next, expand the Transformation rules section, and click on Add new transformation rule. Then, create the following rules:
+
+Parameter | Value
+-------- | --------
+Target | Schema
+Schema name | HR
+Action | Make lowercase
+
+Parameter | Value
+-------- | --------
+Target | Table
+Schema Name | HR
+Table Name | %
+Action | Make lowercase
+
+Parameter | Value
+-------- | --------
+Target | Column
+Schema Name | HR
+Table Name | %
+Column Name | %
+Action | Make lowercase
+
+![Create task mappings](images/create_task_mappings_cdc.png)
+
+6. After entering the values click on **Create task**.
+
+7. Wait till the task status changes to **Replication ongoing**
+    
+    ![Migration Task Progress](images/migration_complete_cdc.png)
+
+#### Validate the data replication result 
+
+1. Log in to the SQL Developer connecting to the source Oracle database on **OracleXE-SCT** EC2 instance. 
+2. Verify records in existing `REGIONS` table in `HR` schema.
+
+````
+SELECT * FROM HR.REGIONS;
+````
+
+![Initial verification](images/initial_verification.png)
+
+3. Add additional two rows to `REGIONS` table
+
+````
+INSERT INTO HR.REGIONS VALUES (5,'APAC');
+
+INSERT INTO HR.REGIONS VALUES (6,'LATIN AMERICA');
+
+COMMIT WORK;
+
+````
+
+4. Log in to the SQL Developer connecting to the target Aurora PostgreSQL database on **OracleXE-SCT** EC2 instance.
+
+5. Verify whether the changes are migrated to `REGION` table in target Aurora PostgreSQL database.
+
+````
+SELECT * FROM hr.regions;
+````
+
+![Final verification](images/final_verification.png)
+
+6. You can further verify the number of inserts, deletes, updates, and DDLs by viewing the **Table statistics** of **Database migration tasks** in AWS console.
+
+![Table statistics](images/table_statistics_cdc.png)
+
+#### Restore the triggers 
+
+After completing the CDC, you need to restore the triggers in the target database. 
+
+````
+CREATE TRIGGER secure_employees
+BEFORE INSERT OR UPDATE OR DELETE
+ON hr.employees
+FOR EACH STATEMENT
+EXECUTE PROCEDURE hr.secure_employees$employees();
+
+CREATE TRIGGER update_job_history
+AFTER UPDATE OF JOB_ID, DEPARTMENT_ID
+ON hr.employees
+FOR EACH ROW
+EXECUTE PROCEDURE hr.update_job_history$employees();
+
+````
+
+___ 
+
+## Conclusion
+This part of the workshop has demonstrated heterogeneous database migration, from Oracle to Aurora PostgreSQL by AWS Database Migration Service (DMS). The AWS DMS provides both full-load database replication as well as Data Change Capture in real time.
 ___
 
 [Back to main guide](../README.md)|[Next](optional1.md)
