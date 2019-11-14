@@ -44,13 +44,12 @@ Replication engine version | 2.4.5
 VPC | vpc-xxxxx-GPSTEC315 
 Multi-AZ | No 
 Publicly accessible | Unchecked 
-VPC security group(s) (Advanced security and network configuration) | 
-DMSWorkshop-AuroraPostgreSQLSecurityGroup-xxxxx
 
-![Create replication instance](images/create_rep_inst.png)
+![Create replication instance](images/create_rep_inst_detail.png)
 
 _Note:Creation of replication instance takes few minutes. While waiting for the replication instance to be created, you can proceede with creation of source and target database endpoints in the next steps. However, you can test connectivity only after the replication instance has been created._
-__
+
+___
 
 ## Task 2 - Create DMS source and target endpoints
 
@@ -150,7 +149,7 @@ Database name | AuroraPostgreSQLDB
 **Drop foreign keys**
 
 ```
-ALTER TABLE hr.countries DROP CONSTRAINT countr_reg_fk;
+ALTER TABLE hr.countries DROP CONSTRAINT country_reg_fk;
 ALTER TABLE hr.departments DROP CONSTRAINT dept_loc_fk;
 ALTER TABLE hr.departments DROP CONSTRAINT dept_mgr_fk;
 ALTER TABLE hr.employees DROP CONSTRAINT emp_dept_fk;
@@ -169,6 +168,7 @@ ALTER TABLE hr.locations DROP CONSTRAINT loc_c_id_fk;
 ```
 DROP TRIGGER IF EXISTS secure_employees ON hr.employees;
 DROP TRIGGER IF EXISTS update_job_history ON hr.employees;
+
 ```
 
 ![Drop foreign keys](images/drop_trigger.png)
@@ -183,21 +183,130 @@ AWS DMS uses Database Migration Task to migrate the data from source to the targ
 *Enabling the logging would help debugging issues that DMS encounters during data migration*
 
 2. Create a data migration task with the following values for migrating the `HR` database.
-| Parameter | Value |
-| --- | --- |
-| Task identifier | oracle-migration-task |
-| Replication instance | your replication instance |
-| Source database endpoint | oracle-source |
-| Target database endpoint | aurora-postgresql-target |
-| Migration type | Migrate existing data |
-| Start task on create | Checked |
-| Target table preparation mode | Truncate |
-| Include LOB columns in replication | Limited LOB mode |
-| Max LOB size (KB) | 32 |
-| Enable validation | Unchecked | 
-| Enable CloudWatch logs | Checked | 
 
-Expand the Table mappings section, and select Guided UI for the editing mode
+Parameter | Value
+--- | ---
+Task identifier | oracle-migration-task
+Replication instance | your replication instance
+Source database endpoint | oracle-source
+Target database endpoint | aurora-postgresql-target
+Migration type | Migrate existing data
+Start task on create | Checked
+Target table preparation mode | Truncate
+Include LOB columns in replication | Limited LOB mode
+Max LOB size (KB) | 32
+Enable validation | Unchecked
+Enable CloudWatch logs | Checked
+
+3. Expand the Table mappings section, and select Guided UI for the editing mode
+4. Click on Add new selection rule button and enter the following values:
+Parameter | Value
+-------- | --------
+Schema name | HR
+Table name| %
+Action | Include
+
+5. Next, expand the Transformation rules section, and click on Add new transformation rule. Then, create the following rules:
+
+Parameter | Value
+-------- | --------
+Target | Schema
+Schema name | HR
+Action | Make lowercase
+
+Parameter | Value
+-------- | --------
+Target | Table
+Schema Name | HR
+Table Name | %
+Action | Make lowercase
+
+Parameter | Value
+-------- | --------
+Target | Column
+Schema Name | HR
+Table Name | %
+Column Name | %
+Action | Make lowercase
+
+![Create task mappings](images/create_task_mappings.png)
+
+6. After entering the values click on **Create task**.
+7. At this point, the task should start migrating data from the source Oracle database to the Amazon Aurora RDS instance.
+![Migration Task Progress](images/migration_progress.png)
+8. Go to **Database migration tasks** to monitor the task progress and once the task status is **Load complete**, your data should have been replicated to the target database.
+![Migration Task Progress](images/migration_complete.png)
+
+#### Validate the data replication result 
+
+1. Click on your task **oracle-migration-task** and scroll to the **Table statistics** section to view how many rows have been moved.
+    ![Table statistics](images/table_statistics.png)
+2. If there is any error, the status color changes from green to red. Click on **View logs** link for the logs.
+3. On the target Aurora database, check the tables for migrated data using SQL Developer.
+     ![Verify Target datavase](images/verify_target_db.png)
+
+#### Restore the foreign keys 
+1. When the full load is complete, enable the foreign key constraints.
+
+```
+### Add foreign keys on the target database
+ALTER TABLE hr.locations
+ADD CONSTRAINT loc_c_id_fk FOREIGN KEY (country_id) 
+REFERENCES hr.countries (country_id)
+ON DELETE NO ACTION;
+
+ALTER TABLE hr.countries
+ADD CONSTRAINT country_reg_fk FOREIGN KEY (region_id) 
+REFERENCES hr.regions (region_id)
+ON DELETE NO ACTION;
+
+ALTER TABLE hr.employees
+ADD CONSTRAINT emp_dept_fk FOREIGN KEY (department_id) 
+REFERENCES hr.departments (department_id)
+ON DELETE NO ACTION;
+
+ALTER TABLE hr.job_history
+ADD CONSTRAINT jhist_dept_fk FOREIGN KEY (department_id) 
+REFERENCES hr.departments (department_id)
+ON DELETE NO ACTION;
+
+ALTER TABLE hr.departments
+ADD CONSTRAINT dept_loc_fk FOREIGN KEY (location_id) 
+REFERENCES hr.locations (location_id)
+ON DELETE NO ACTION;
+
+ALTER TABLE hr.departments
+ADD CONSTRAINT dept_mgr_fk FOREIGN KEY (manager_id) 
+REFERENCES hr.employees (employee_id)
+ON DELETE NO ACTION;
+
+ALTER TABLE hr.employees
+ADD CONSTRAINT emp_manager_fk FOREIGN KEY (manager_id) 
+REFERENCES hr.employees (employee_id)
+ON DELETE NO ACTION;
+
+ALTER TABLE hr.job_history
+ADD CONSTRAINT jhist_emp_fk FOREIGN KEY (employee_id) 
+REFERENCES hr.employees (employee_id)
+ON DELETE NO ACTION;
+
+ALTER TABLE hr.employees
+ADD CONSTRAINT emp_job_fk FOREIGN KEY (job_id) 
+REFERENCES hr.jobs (job_id)
+ON DELETE NO ACTION;
+
+ALTER TABLE hr.job_history
+ADD CONSTRAINT jhist_job_fk FOREIGN KEY (job_id) 
+REFERENCES hr.jobs (job_id)
+ON DELETE NO ACTION;
+
+```
+
+___
+## Task 4 - Create Change Data Capture (CDC) from the source Oracle to the target Aurora database
+
+1. Set up Supplemental Logging for the Oracle database
+
 
 ___
 
