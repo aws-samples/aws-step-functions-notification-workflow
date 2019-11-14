@@ -321,7 +321,7 @@ Similarly, you need to enable table-level supplemental logging for each table th
 
 Refer to [Using Oracle LogMiner or Oracle Binary Reader for Change Data Capture (CDC)](https://docs.aws.amazon.com/dms/latest/userguide/CHAP_Source.Oracle.html#CHAP_Source.Oracle.CDC) for more details.  
 
-**For this workshop we have already made these changes in the source Oracle database.** 
+_**Note: For this workshop we have already made these changes in the source Oracle database.**_
 
 #### Configure and run a CDC Replication Task
 In this part of the lab you are going to create another Database Migration Tasks for capturing data changes from the source Oracle database and migrate to target Aurora PostgreSQL.
