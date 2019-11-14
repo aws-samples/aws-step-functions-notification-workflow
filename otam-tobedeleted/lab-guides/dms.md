@@ -307,7 +307,7 @@ ON DELETE NO ACTION;
 ```
 
 ___
-## Task 4 - Run DMS Replication Task for Change Data Capture (CDC)
+## Task 4 - Run a DMS Replication Task for Change Data Capture (CDC)
 
 Oracle offers two methods for reading the redo logs when doing change processing, Oracle LogMiner and Oracle Binary Reader. Oracle LogMiner provides a SQL interface to Oracle’s online and archived redo log files. Binary Reader is an AWS DMS feature that reads and parses the raw redo log files directly.
 
@@ -323,7 +323,7 @@ Refer to [Using Oracle LogMiner or Oracle Binary Reader for Change Data Capture 
 
 **For this workshop we have already made these changes in the source Oracle database.** 
 
-#### Configure and run CDC Replication Task
+#### Configure and run a CDC Replication Task
 In this part of the lab you are going to create another Database Migration Tasks for capturing data changes from the source Oracle database and migrate to target Aurora PostgreSQL.
 
 1. Click on **Database migration tasks** on the left-hand menu, then click on the **Create task** button on the top right corner.
