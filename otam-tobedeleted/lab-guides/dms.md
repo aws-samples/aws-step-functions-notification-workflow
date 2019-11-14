@@ -62,14 +62,14 @@ __
 Parameter | Value
 --- | ---
 Endpoint type | Source endpoint
-Endpoint identifier | Oracle-Source 
-Source engine | oracle 
+Endpoint identifier | Oracle-Source
+Source engine | oracle
 Server name | Get "EC2SQLInstancePrivateIP" from output of CloudFormation
-Port | 1521 
+Port | 1521
 SSL mode | none 
-User name | hr 
-Password | hr123 
-SID | XE 
+User name | hr
+Password | hr123
+SID | XE
 
 ![Create Source Endpoints](images/create_sep.png)
 
@@ -131,15 +131,16 @@ SELECT 'countries' TABLE_NAME, COUNT(*) FROM HR.COUNTRIES Order by TABLE_NAME;
 Before running DMS Replication Task, you need to disable the foreign keys and triggers on the target database. 
 
 1. Right Click on `AuroraPostgreSQL` under Connections and select properties to verify the following parameters.
-Parameter | Value 
+
+Parameter | Value
 --- | ---
-Connection Name | AuroraPostgreSQL 
-Username| postgres 
+Connection Name | AuroraPostgreSQL
+Username| postgres
 Password | Aurora321 
 Save Password | checked 
-Hostname | Get "DBInstanceEndpointAuroraPostgreSQL" from CloudFormation output 
-Port| 5432 
-Database name | AuroraPostgreSQLDB 
+Hostname | Get `DBInstanceEndpointAuroraPostgreSQL` from CloudFormation output 
+Port| 5432
+Database name | AuroraPostgreSQLDB
 
 ![Aurora Connection](images/create_conn_aurora.png)
 
