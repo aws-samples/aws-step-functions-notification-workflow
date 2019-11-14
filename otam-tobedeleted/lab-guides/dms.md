@@ -34,16 +34,17 @@ ___
 2. Click on the **Create replication instance** button on the top right side.
 ![Create replication instance](images/create_rep_inst.png)
 3. Configure the replication instance with the following parameter values. Then, click on the **Create** button.
-| Parameter | Value |
-| --- | --- |
-| Name | replication-instance |
-| Description | Oracle to Aurora DMS replication instance |
-| Instance Class | dms.t2.medium |
-| Replication engine version | 2.4.5 |
-| VPC | vpc-<vpcid>-GPSTEC315 |
-| Multi-AZ | No |
-| Publicly accessible | Unchecked |
-| VPC security group(s) (Advanced security and network configuration) | DMSWorkshop-AuroraPostgreSQLSecurityGroup-<id>|
+Parameter | Value
+--- | --- 
+Name | replication-instance 
+Description | Oracle to Aurora DMS replication instance 
+Instance Class | dms.t2.medium 
+Replication engine version | 2.4.5 
+VPC | vpc-<vpcid>-GPSTEC315 
+Multi-AZ | No 
+Publicly accessible | Unchecked 
+VPC security group(s) (Advanced security and network configuration) 
+DMSWorkshop-AuroraPostgreSQLSecurityGroup-<id>
 
 ![Create replication instance](images/create_rep_inst.png)
 
@@ -58,17 +59,17 @@ __
 
 2. Enter the Connection details for source endpoint from the following parameter values. 
 
-| Parameter | Value |
-| --- | --- |
-| Endpoint type | Source endpoint|
-| Endpoint identifier | Oracle-Source |
-| Source engine | oracle |
-| Server name | Get "EC2SQLInstancePrivateIP" from output of CloudFormation|
-| Port | 1521 |
-| SSL mode | none |
-| User name | hr |
-| Password | hr123 |
-| SID | XE | 
+Parameter | Value
+--- | ---
+Endpoint type | Source endpoint
+Endpoint identifier | Oracle-Source 
+Source engine | oracle 
+Server name | Get "EC2SQLInstancePrivateIP" from output of CloudFormation
+Port | 1521 
+SSL mode | none 
+User name | hr 
+Password | hr123 
+SID | XE 
 
 ![Create Source Endpoints](images/create_sep.png)
 
@@ -76,17 +77,17 @@ __
 
 4. Repeat the previous steps to create the target endpoint for Aurora RDS Database with the following parameter values. 
 
-| Parameter | Value |
-| --- | --- |
-| Endpoint type | Target endpoint |
-| Endpoint identifier | Aurora-PostgreSQL-Target |
-| Source engine | aurora-postgresql |
-| Server name | Get "DBInstanceEndpointAuroraPostgreSQL" from output of CloudFormation|
-| Port | 5432 |
-| SSL mode | none |
-| User name | postgres |
-| Password | Aurora321 |
-| Database name | AuroraPostgreSQLDB | 
+Parameter | Value 
+--- | --- 
+Endpoint type | Target endpoint 
+Endpoint identifier | Aurora-PostgreSQL-Target 
+Source engine | aurora-postgresql 
+Server name | Get "DBInstanceEndpointAuroraPostgreSQL" from output of CloudFormation
+Port | 5432 
+SSL mode | none 
+User name | postgres 
+Password | Aurora321 
+Database name | AuroraPostgreSQLDB 
 
 ![Create Target Endpoints](images/create_tep.png)
 
@@ -101,15 +102,15 @@ __
 2. Launch **SQL Develpoer** from the shortcut on the desktop. 
 3. Right Click on `XE` under Connections and select properties to verify the following parameters.
 
-| Parameter | Value |
-| --- | --- |
-| Connection Name | XE |
-| Username| hr |
-| Password | hr123 |
-| Save Password | checked |
-| Hostname | Get "EC2SQLInstancePrivateIP" from CloudFormation output |
-| Port| 1521 |
-| SID | XE |
+Parameter | Value 
+--- | --- 
+Connection Name | XE 
+Username| hr 
+Password | hr123 
+Save Password | checked 
+Hostname | Get "EC2SQLInstancePrivateIP" from CloudFormation output 
+Port| 1521 
+SID | XE 
 
 ![SQLTargetDB creation](images/create_conn.png)
 
@@ -130,15 +131,15 @@ SELECT 'countries' TABLE_NAME, COUNT(*) FROM HR.COUNTRIES Order by TABLE_NAME;
 Before running DMS Replication Task, you need to disable the foreign keys and triggers on the target database. 
 
 1. Right Click on `AuroraPostgreSQL` under Connections and select properties to verify the following parameters.
-| Parameter | Value |
-| --- | --- |
-| Connection Name | AuroraPostgreSQL |
-| Username| postgres |
-| Password | Aurora321 |
-| Save Password | checked |
-| Hostname | Get "DBInstanceEndpointAuroraPostgreSQL" from CloudFormation output |
-| Port| 5432 |
-| Database name | AuroraPostgreSQLDB | 
+Parameter | Value 
+--- | ---
+Connection Name | AuroraPostgreSQL 
+Username| postgres 
+Password | Aurora321 
+Save Password | checked 
+Hostname | Get "DBInstanceEndpointAuroraPostgreSQL" from CloudFormation output 
+Port| 5432 
+Database name | AuroraPostgreSQLDB 
 
 ![Aurora Connection](images/create_conn_aurora.png)
 
