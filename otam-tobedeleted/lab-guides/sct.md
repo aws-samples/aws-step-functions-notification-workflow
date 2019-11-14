@@ -121,6 +121,7 @@ and choose Create Report. Observe that the schema of the source database is now 
 
 7. When prompted if you want to apply the schema to the database, click **Yes**.
 8. At this point, the schema has been applied to the target database. Expand the `HR` schema to see the tables.
+
     _Note: If you don’t see the tables, right click on `HR` schema and select **Refresh from Database**._
 
 ### Conclusion
