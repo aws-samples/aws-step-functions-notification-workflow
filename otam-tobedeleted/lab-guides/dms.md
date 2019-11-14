@@ -6,7 +6,7 @@ ___
 
 AWS Database Migration Service helps you migrate databases to AWS easily and securely. The source database remains fully operational during the migration, minimizing downtime to applications that rely on the database. The AWS Database Migration Service can migrate your data to and from most widely used commercial and open-source databases. AWS Database Migration Service can also be used for continuous data replication with high availability.
 
-This lab will walk you through migrating data from an Oracle database hosted on an EC2 instance to Amazon Aurora PostgreSQL. 
+This lab will walk you through the steps to migrate data from an Oracle database hosted on an EC2 instance to Amazon Aurora PostgreSQL. 
 
 In this activity, you perform the following tasks:
 
@@ -63,7 +63,7 @@ __
 Parameter | Value
 --- | ---
 Endpoint type | Source endpoint
-Endpoint identifier | Oracle-Source
+Endpoint identifier | oracle-source
 Source engine | oracle
 Server name | Get "EC2SQLInstancePrivateIP" from output of CloudFormation
 Port | 1521
@@ -81,7 +81,7 @@ SID | XE
 Parameter | Value 
 --- | --- 
 Endpoint type | Target endpoint 
-Endpoint identifier | Aurora-PostgreSQL-Target 
+Endpoint identifier | aurora-postgresql-target 
 Source engine | aurora-postgresql 
 Server name | Get "DBInstanceEndpointAuroraPostgreSQL" from output of CloudFormation
 Port | 5432 
@@ -174,6 +174,30 @@ DROP TRIGGER IF EXISTS update_job_history ON hr.employees;
 ![Drop foreign keys](images/drop_trigger.png)
 
 #### Configure and run Replication Task
+AWS DMS uses Database Migration Task to migrate the data from source to the target database. In this part of the lab you are going to create a Database Migration Tasks for migrating the existing data.
+
+1. Click on **Database migration tasks** on the left-hand menu, then click on the **Create task** button on the top right corner.
+
+![Create replication task](images/create_task.png)
+
+*Enabling the logging would help debugging issues that DMS encounters during data migration*
+
+2. Create a data migration task with the following values for migrating the `HR` database.
+| Parameter | Value |
+| --- | --- |
+| Task identifier | oracle-migration-task |
+| Replication instance | your replication instance |
+| Source database endpoint | oracle-source |
+| Target database endpoint | aurora-postgresql-target |
+| Migration type | Migrate existing data |
+| Start task on create | Checked |
+| Target table preparation mode | Truncate |
+| Include LOB columns in replication | Limited LOB mode |
+| Max LOB size (KB) | 32 |
+| Enable validation | Unchecked | 
+| Enable CloudWatch logs | Checked | 
+
+Expand the Table mappings section, and select Guided UI for the editing mode
 
 ___
 
