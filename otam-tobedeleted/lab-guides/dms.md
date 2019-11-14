@@ -32,7 +32,9 @@ ___
 
 1. Go to the [AWS DMS console](https://console.aws.amazon.com/dms/v2/) and click on Replication Instances on the left-hand menu. This will launch the **Replication instance** screen in the Database Migration Service.
 2. Click on the **Create replication instance** button on the top right side.
+
 ![Create replication instance](images/create_rep_inst.png)
+
 3. Configure the replication instance with the following parameter values. Then, click on the **Create** button.
 
 Parameter | Value
@@ -92,7 +94,8 @@ Database name | AuroraPostgreSQLDB
 ![Create Target Endpoints](images/create_tep.png)
 
 5. Once the information has been entered, click **Run Test**. When the status turns to successful, click **Create endpoint**.
-__
+
+___
 
 ## Task 3 - Run DMS Replication Task for full load replication
 
@@ -200,8 +203,9 @@ Enable CloudWatch logs | Checked
 
 3. Expand the Table mappings section, and select Guided UI for the editing mode
 4. Click on Add new selection rule button and enter the following values:
+
 Parameter | Value
--------- | --------
+----- | -----
 Schema name | HR
 Table name| %
 Action | Include
