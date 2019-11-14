@@ -34,17 +34,18 @@ ___
 2. Click on the **Create replication instance** button on the top right side.
 ![Create replication instance](images/create_rep_inst.png)
 3. Configure the replication instance with the following parameter values. Then, click on the **Create** button.
+
 Parameter | Value
 --- | --- 
 Name | replication-instance 
 Description | Oracle to Aurora DMS replication instance 
 Instance Class | dms.t2.medium 
 Replication engine version | 2.4.5 
-VPC | vpc-<vpcid>-GPSTEC315 
+VPC | vpc-xxxxx-GPSTEC315 
 Multi-AZ | No 
 Publicly accessible | Unchecked 
 VPC security group(s) (Advanced security and network configuration) 
-DMSWorkshop-AuroraPostgreSQLSecurityGroup-<id>
+DMSWorkshop-AuroraPostgreSQLSecurityGroup-xxxxx
 
 ![Create replication instance](images/create_rep_inst.png)
 
