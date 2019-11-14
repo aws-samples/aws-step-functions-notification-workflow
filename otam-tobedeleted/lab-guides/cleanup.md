@@ -2,17 +2,17 @@
 
 ___
 
-# 7. Clean Up
+# 7. Cleanup
 
-Congratulations on successfully completing the workshop. Time to clean up your environment.
+Congratulations on successfully completing the workshop. Now, it is time to clean up your environment.
 
 ___
 
-## Clean-up steps
+## Cleanup steps
 
 1. Delete the Cloudformation stack.
-2. Delete the DMS Task.
-3. Delete the DMS Instance. 
+2. Delete the DMS task.
+3. Delete the DMS replication instance. 
 4. Delete the DMS end points.
 
 

@@ -1,14 +1,13 @@
-[Back to main guide](../README.md)|[Next](dms.md)
+﻿[Back to main guide](../README.md)|[Next](dms.md)
 
 ___
 
-# Schema Conversion Tool (SCT)
+# AWS Schema Conversion Tool (SCT)
 
 The following steps provide instructions for converting an Oracle database to an Amazon Aurora PostgreSQL database. In this activity, you perform the following tasks:
-- Log in to Windows EC2 instance
-- Use the Schema Conversion Tool to create a database migration project
-- Use SCT to convert the Oracle schema to PostgreSQL schema and analyze schema
-conversion issues
+- Log in to the Windows EC2 instance (this has the AWS SCT installed)  
+- Use SCT to create a database migration project
+- Use SCT to convert the Oracle schema to a PostgreSQL schema and analyze schema conversion issues
 - Apply the converted schema to the Aurora PostgreSQL database
 
     ![Connect to EC2 Instance](images/sct.png)
@@ -19,23 +18,23 @@ ___
 1. Go to the [Amazon EC2 console](https://console.aws.amazon.com/ec2/v2/home?region=us-east-1#Home:) and click on Instances in the left column.
 2. Select the instance with the name **OracleXE-SCT** and then click the **Connect** button.
 
-    _Note : If you need any assistance connecting to your instance, please see our [connection documentation](https://docs.aws.amazon.com/AWSEC2/latest/WindowsGuide/connecting_to_windows_instance.html?icmpid=docs_ec2_console)._
+    _Note : If you need instructions on connecting to a Windows instance, please see our [documentation](https://docs.aws.amazon.com/AWSEC2/latest/WindowsGuide/connecting_to_windows_instance.html?icmpid=docs_ec2_console)._
 
 ![Connect to EC2 Instance](images/instance-connect.png)
 
-3. Click on **Download Remote Desktop File** to download the RDP file to connect to EC2 instance **OracleXE-SCT**. 
-4. Connect to EC2 instance using below password from RDP Client. 
+3. Click on **Download Remote Desktop File** to download the RDP file to connect to the EC2 instance **OracleXE-SCT**. 
+4. Connect to the EC2 instance using the following password 
 
     **Windows password**: GPSreInvent@321
 
 ___
 
-## Task 2 - Launch Schema Conversion Tool on the server
-Now that you are connected to the EC2 instance **OracleXE-SCT**, launch the Schema Conversion Tool from Application menu or shortcut on the desktop.
+## Task 2 - Launch the Schema Conversion Tool
+Now that you are connected to the EC2 instance **OracleXE-SCT**, launch the Schema Conversion Tool from the shortcut on the desktop.
 
 1. Launch SCT from the shortcut on the desktop and create a new Database Migration Project using the tool.
 ![Create New Project](images/new_project.png)
-2. Enter the following values into the form and then click **OK**.
+2. Enter the following values and click **OK**.
 
     Parameter | Value
     ----------|------
@@ -47,8 +46,7 @@ Now that you are connected to the EC2 instance **OracleXE-SCT**, launch the Sche
 
     ![Create New Project](images/new_project1.png)
 
-3. Click **Connect to Oracle** on the Select Template page. Enter the source database configurations in the form, and click **Test Connection**. Once
-the connection is successfully tested, click **Next**.
+3. Click **Connect to Oracle** on the Select Template page. Enter the source database details, and click **Test Connection**. Once the connection is successfully tested, click **Next**.
 
     Parameter | Value
     ----------|------
@@ -63,7 +61,7 @@ the connection is successfully tested, click **Next**.
     
     ![Connect to Oracle](images/sct_oracle.png)
 
-4. Click **Connect to Amazon Aurora(PostgreSQL compatible)** on the Select Template page. Enter the source database configurations in the form, and click **Test Connection**. Once
+4. Click **Connect to Amazon Aurora(PostgreSQL compatible)** on the Select Template page. Enter the source database details in the form, and click **Test Connection**. Once
 the connection is successfully tested, click **Next**.
 
     Parameter | Value
@@ -78,13 +76,13 @@ the connection is successfully tested, click **Next**.
     
     ![Connect to Amazon Aurora](images/sct_aurora.png)
 
-5. Select and Expand the `HR` schema from the left-hand panel to inspect the schema objects.
+5. Select and expand the `HR` schema from the left-hand panel to inspect the schema objects.
     
     ![Schema Objects](images/schema_objects.png)
 ___
 
 ## Task 3 - Convert the Schema Using the Schema Conversion Tool
-Now that you have created a new Database Migration Project, the next step is to convert the Oracle schema of the source database to that of target Amazon Aurora PostgreSQL database.
+After creating a Database Migration Project, the next step is to convert the source Oracle schema to the target PostgreSQL schema.
 
 1. Right-click on the `HR` schema from Oracle source and select **Convert Schema** to generate the data definition language (DDL) statements for the target database.
 
@@ -92,30 +90,29 @@ _Note: You may be prompted with a dialog box “These objects might already exis
 
 ![Convert Schema](images/convert_schema.png)
 
-AWS SCT analyses the schema and creates a database migration assessment report for the conversion to PostgreSQL. Items with a red exclamation mark next to them cannot be directly translated from the source to the target. In this case,it includes Functions and/or Procedures and Views.
+AWS SCT analyses the schema and creates a database migration assessment report for the conversion to PostgreSQL. Items with a red exclamation mark next to them cannot be directly translated from the source to the target. In this case,it includes Functions, Procedures, and Views.
 
-2. Click on the **View** button, and choose **Assessment Report view** to view detailed assesment report.
+2. Click on the **View** button, and choose **Assessment Report view** to view the detailed assesment report.
 
 ![Assessment Report view](images/assessment1.png)    
 
-3. Review the assessment report and examine whether there are suggested actions to address schema conversion issues. 
+3. Review the assessment report and check if there are any suggested actions to address schema conversion issues. 
 
-4. Next, navigate to the **Action Items** tab in the report to see the items that have issues converting to the new schema. 
+4. Next, navigate to the **Action Items** tab in the report to see the items that have issues while converting to the new PostgreSQL schema. 
 
 ![Action Items](images/action-items.png) 
 
 Check each of the issues listed and compare the contents under the source Oracle panel and the target Aurora PostgreSQL panel. Are the issues resolved? And how? SCT has proposed resolutions by generating equivalent PostgreSQL DDL to convert the objects. Additionally, SCT highlights each conversion issue where it cannot automatically generate a conversion, and provide hints on how you can successfully convert the database object.
 
-Notice the issue highlighted in the procedure named `ADD_JOB_HISTORY`. You’ll see that SCT is unable to automatically convert procedure. You can complete one of the following actions to fix the issue:
+Notice the issue highlighted in the procedure `ADD_JOB_HISTORY`. You’ll see that SCT is unable to automatically convert the procedure. You can take one of the following actions to fix the issue:
     - Modify the objects on the source Oracle database so that AWS SCT can convert the objects to the target Aurora PostgreSQL database.
-    - Instead of modifying the source schema, modify scripts that AWS SCT generates before applying the scripts on the target Aurora PostgreSQL database.
+    - Or, modify the scripts that AWS SCT generates before applying the scripts on the target Aurora PostgreSQL database.
 
-Refer to [Migration Playbook](https://d1.awsstatic.com/whitepapers/Migration/oracle-database-amazon-aurora-postgresql-migration-playbook.pdf) for best practices to convert Oracle to Aurora-PostgreSQL compatible schema. 
+Refer to the [Migration Playbook](https://d1.awsstatic.com/whitepapers/Migration/oracle-database-amazon-aurora-postgresql-migration-playbook.pdf) for best practices to convert an Oracle database to a PostgreSQL database. 
 
-5. Manually fix the schema issue. Then, right-click on the `HR` schema,
-and choose Create Report. Observe that the schema of the source database is now fully compatible with the target database.
+5. After fixing the schema conversion issues, right-click on the `HR` schema, and choose Create Report. Observe that the schema of the source database (Oracle) is now fully compatible with the target database (PostgreSQL).
 
-6. To migrate the converted schema in the target database, Right click on the `HR` schema in the right-hand panel, and click **Apply to database**.
+6. To migrate the converted schema to the target database, right click on the `HR` schema in the right-hand panel, and select **Apply to database**.
 
 ![Apply to database](images/apply_db.png) 
 
@@ -126,7 +123,7 @@ and choose Create Report. Observe that the schema of the source database is now 
 
 ### Conclusion
 
-This part of the workshop has demonstrated how to successfully convert and migrate the schema from an Oracle database to an Amazon Aurora PostgreSQL database. The AWS Schema Conversion Tool (SCT) largely automates the schema conversion. These same steps can be followed to migrate SQL Server and Oracle workloads to other Amazon RDS engines including Aurora MySQL and MySQL.
+This part of the workshop demonstrated how to convert and migrate the schema from an Oracle database to an Amazon Aurora PostgreSQL database. The AWS Schema Conversion Tool (SCT) automates the schema conversion to a large extent. These same steps can be followed to migrate SQL Server and Oracle workloads to other Amazon RDS engines including Aurora MySQL and MySQL.
 ___
 
 [Back to main guide](../README.md)|[Next](dms.md)

@@ -4,21 +4,21 @@ ___
 
 # Lab Setup
 
-In this activity we will deploy the CloudFormation template to create required lab environment.
+In this activity, we will deploy the CloudFormation template to create the lab environment.
 
 The environment for this lab consists of:
 - An EC2 instance with following components 
    - AWS Schema Conversion Tool (SCT)
    - Source Oracle database
-   - SQL Developer
-   - Sample Web Application 
-- An Amazon RDS Aurora PostgreSQL instance used as the target database
+   - Oracle SQL Developer
+   - A sample web application 
+- An Amazon Aurora PostgreSQL instance used as the target database
 
 ___
 
 ## Deploy the CloudFormation Template
 
-1. Click on one of the buttons below to launch CloudFormation stack in one of the AWS regions.
+1. Click on one of the buttons below to launch the CloudFormation stack in one of the AWS regions.
 
 Region | Launch
 -------|-----
@@ -27,19 +27,19 @@ US West (Oregon) | [![Launch Solutionin us-west-2](http://docs.aws.amazon.com/AW
 
 2. Click **Next** on the Select Template page.
 
-3. Enter a **Stack Name** or leave the default and click **Next**.
+3. Enter a **Stack Name** or accept the default and click **Next**.
 
-4. On the Options page, leave all the defaults and click **Next**.
+4. On the Options page, accept all the defaults and click **Next**.
 
 5. On the Review page, click **Create**.
     
-6. Click on Stacks in  the top navigation to see the CloudFormation Stack screen. You should see the `DMSWorkshop` CloudFormation template in progress.
+6. Click on Stacks in the navigation panel to list the CloudFormation Stacks. You should see the `DMSWorkshop` stack creation in progress.
 
 ![Stack Progress](images/stack-progress.png)
 
-7. After CloudFormation template is complete, select the stack Name - `DMSWorkshop`, Click on the **Resources** tab. You will see various AWS resources.
+7. After the stack creation is complete, select the stack Name - `DMSWorkshop`, Click on the **Resources** tab. You will see various AWS resources created.
 
-8. Make a Note of the stack Output parameters. You can find the stack output at the **Outputs** tab.
+8. Make a note of the stack output parameters. You can find the stack output parameters in the **Outputs** tab.
 
 ![Stack Output](images/cfn-output.png)
 ___
