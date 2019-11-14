@@ -44,7 +44,7 @@ Replication engine version | 2.4.5
 VPC | vpc-xxxxx-GPSTEC315 
 Multi-AZ | No 
 Publicly accessible | Unchecked 
-VPC security group(s) (Advanced security and network configuration) 
+VPC security group(s) (Advanced security and network configuration) | 
 DMSWorkshop-AuroraPostgreSQLSecurityGroup-xxxxx
 
 ![Create replication instance](images/create_rep_inst.png)
