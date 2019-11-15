@@ -22,8 +22,8 @@ ___
 
 Region | Launch
 -------|-----
-US East (N. Virginia) | [![Launch Solution in us-east-1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=DMSWorkshop&templateURL=https://reinvent-2019-oracle-aurora.s3.amazonaws.com/GPSTEC315_lab_template.json)
-US West (Oregon) | [![Launch Solutionin us-west-2](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?stackName=DMSWorkshop&templateURL=https://reinvent-2019-oracle-aurora.s3.amazonaws.com/GPSTEC315_lab_template.json)
+US East (N. Virginia) | [![Launch Solution in us-east-1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=DMSWorkshop&templateURL=https://reinvent-2019-oracle-aurora.s3.amazonaws.com/GPSTEC315_lab_setup.yaml)
+US West (Oregon) | [![Launch Solutionin us-west-2](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?stackName=DMSWorkshop&templateURL=https://reinvent-2019-oracle-aurora.s3.amazonaws.com/GPSTEC315_lab_setup.yaml)
 
 2. Click **Next** on the Select Template page.
 

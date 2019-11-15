@@ -66,7 +66,7 @@ the connection is successfully tested, click **Next**.
 
     Parameter | Value
     ----------|------
-    Server Name | <DBInstanceEndpointAuroraPostgreSQL> from cloud formation output
+    Server Name | Get `AuroraPostgreSQLEndpoint` from CloudFormation stack output
     Server Port | 5432
     Database | AuroraPostgreSQLDB 
     User Name | postgres

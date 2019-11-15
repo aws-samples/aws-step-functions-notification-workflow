@@ -43,13 +43,13 @@ Name | replication-instance
 Description | Oracle to Aurora DMS replication instance 
 Instance Class | dms.t2.medium 
 Replication engine version | 2.4.5 
-VPC | vpc-xxxxx-GPSTEC315 
+VPC | vpc-xxxxxxxxx (VpcId from CloudFormation stack output)
 Multi-AZ | No 
 Publicly accessible | Unchecked 
 
 ![Create replication instance](images/create_rep_inst_detail.png)
 
-_Note:Creation of the replication instance takes a few minutes. While waiting for the replication instance to be created, you can proceede with creation of source and target database endpoints in the next step. However, you can test the endpoint connectivity only after the replication instance has been created._
+_Note: Creation of the replication instance takes a few minutes. While waiting for the replication instance to be created, you can proceede with creation of source and target database endpoints in the next step. However, you can test the endpoint connectivity only after the replication instance has been created._
 
 ___
 
@@ -66,7 +66,7 @@ Parameter | Value
 Endpoint type | Source endpoint
 Endpoint identifier | oracle-source
 Source engine | oracle
-Server name | Get "EC2SQLInstancePrivateIP" from output of CloudFormation
+Server name | Get `OracleXEInstancePrivateIP` from CloudFormation stack output
 Port | 1521
 SSL mode | none 
 User name | hr
@@ -84,7 +84,7 @@ Parameter | Value
 Endpoint type | Target endpoint 
 Endpoint identifier | aurora-postgresql-target 
 Source engine | aurora-postgresql 
-Server name | Get "DBInstanceEndpointAuroraPostgreSQL" from output of CloudFormation
+Server name | Get `AuroraPostgreSQLEndpoint` from CloudFormation stack output
 Port | 5432 
 SSL mode | none 
 User name | postgres 
@@ -111,7 +111,7 @@ Connection Name | XE
 Username| hr 
 Password | hr123 
 Save Password | checked 
-Hostname | Get "EC2SQLInstancePrivateIP" from CloudFormation output 
+Hostname | Get `OracleXEInstancePrivateIP` from CloudFormation stack output
 Port| 1521 
 SID | XE 
 
@@ -141,7 +141,7 @@ Connection Name | AuroraPostgreSQL
 Username| postgres
 Password | Aurora321 
 Save Password | checked 
-Hostname | Get `DBInstanceEndpointAuroraPostgreSQL` from CloudFormation output 
+Hostname | Get `AuroraPostgreSQLEndpoint` from CloudFormation stack output
 Port| 5432
 Database name | AuroraPostgreSQLDB
 
