@@ -66,7 +66,7 @@ Parameter | Value
 Endpoint type | Source endpoint
 Endpoint identifier | oracle-source
 Source engine | oracle
-Server name | Get `OracleXEInstancePrivateIP` from CloudFormation stack output
+Server name | Get `OracleSCTInstancePrivateIP` from CloudFormation stack output
 Port | 1521
 SSL mode | none 
 User name | hr
@@ -111,7 +111,7 @@ Connection Name | XE
 Username| hr 
 Password | hr123 
 Save Password | checked 
-Hostname | Get `OracleXEInstancePrivateIP` from CloudFormation stack output
+Hostname | Get `OracleSCTInstancePrivateIP` from CloudFormation stack output
 Port| 1521 
 SID | XE 
 

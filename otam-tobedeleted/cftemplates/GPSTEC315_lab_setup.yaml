@@ -163,7 +163,7 @@ Outputs:
   VpcId:
     Description: 'VPC Id'
     Value: !Ref VPC
-  OracleXEInstancePrivateIP:
+  OracleSCTInstancePrivateIP:
     Description: Private IP address of the newly created Oracle DB and SCT EC2 instance
     Value: !GetAtt 
       - EC2Instance
