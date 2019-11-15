@@ -94,7 +94,7 @@ AWS SCT analyses the schema and creates a database migration assessment report f
 
 2. Click on the **View** button, and choose **Assessment Report view** to view the detailed assesment report.
 
-![Assessment Report view](images/assessment1.png)    
+![Assessment Report view](images/assessment.png)    
 
 3. Review the assessment report and check if there are any suggested actions to address schema conversion issues. 
 
