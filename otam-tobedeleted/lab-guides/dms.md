@@ -309,13 +309,13 @@ ON DELETE NO ACTION;
 ___
 ## Task 4 - Run a DMS Replication Task for Change Data Capture (CDC)
 
+You can use AWS Database Migration Service to perform continuous data replication. This helps you migrate your databases to AWS with virtually no downtime. All data changes to the source database that occur during the migration are continuously replicated to the target, allowing the source database to be fully operational during the migration process. After the database migration is complete, the target database will remain synchronized with the source for as long as you choose, allowing you to switchover the database at a convenient time.
+
 Oracle offers two methods for reading the redo logs when doing change processing, Oracle LogMiner and Oracle Binary Reader. Oracle LogMiner provides a SQL interface to Oracle’s online and archived redo log files. Binary Reader is an AWS DMS feature that reads and parses the raw redo log files directly.
 
 By default, AWS DMS uses Oracle LogMiner for change data capture (CDC).
 
-For AWS DMS to read this information, make sure the archive logs are retained on the database server as long as AWS DMS requires them. Retaining archive logs for 24 hours is usually sufficient.
-
-To capture change data, AWS DMS requires database-level supplemental logging to be enabled on your source database. Doing this ensures that the LogMiner has the minimal information to support various table structures such as clustered and index-organized tables.
+To capture change data, the source database must be in ARCHIVELOG mode and supplemental logging must be enabled.
 
 Similarly, you need to enable table-level supplemental logging for each table that you want to migrate.
 
@@ -324,7 +324,7 @@ Refer to [Using Oracle LogMiner or Oracle Binary Reader for Change Data Capture 
 _**Note: For this workshop we have already made these changes in the source Oracle database.**_
 
 #### Configure and run a CDC Replication Task
-In this part of the lab you are going to create another Database Migration Tasks for capturing data changes from the source Oracle database and migrate to target Aurora PostgreSQL.
+In this part of the lab you are going to create another Database Migration Task for capturing data changes from the source Oracle database and migrate to target Aurora PostgreSQL.
 
 1. Click on **Database migration tasks** on the left-hand menu, then click on the **Create task** button on the top right corner.
 
@@ -449,7 +449,7 @@ EXECUTE PROCEDURE hr.update_job_history$employees();
 ___ 
 
 ## Conclusion
-This part of the workshop has demonstrated heterogeneous database migration, from Oracle to Aurora PostgreSQL by AWS Database Migration Service (DMS). The AWS DMS provides both full-load database replication as well as Data Change Capture in real time.
+This part of the workshop demonstrated heterogeneous database migration, from Oracle to Aurora PostgreSQL by AWS Database Migration Service (DMS). The AWS DMS provides both full-load database replication as well as Data Change Capture in real time.
 ___
 
 [Back to main guide](../README.md)|[Next](optional1.md)
