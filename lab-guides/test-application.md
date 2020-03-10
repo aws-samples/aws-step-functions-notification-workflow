@@ -11,7 +11,7 @@ ___
 
 1.	Log in to the [Amazon S3 console](https://console.aws.amazon.com/s3/home).
 2.  Locate **static web-site bucket** created by your **CloudFormation template**. 
-3.	Download **[web.zip](../src/web.zip)**, unzip and **Upload** the content of the **web folder** to static web-site **S3 bucket**. 
+3.	Download content of **[web](../src/web/)** folder and **Upload** the content of the **web folder** to static web-site **S3 bucket**. 
 
 ![S3 website](images/s3-buck.png)
 
